@@ -1,0 +1,12 @@
+#system
+*.log
+.DS_Store
+
+#node
+node_modules
+
+
+/music-models
+/examples
+/test*
+*.stl
