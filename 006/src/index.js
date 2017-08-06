@@ -27,15 +27,6 @@ import { audioUtil, analyser, bands } from './utils/analyser'
 import h from './utils/helpers'
 import DAT from './vendor/dat.gui.min'
 
-/* Custom variables */
-var subAvg = 0
-var lowAvg = 0
-var midAvg = 0
-var highAvg = 0
-
-var time = 0
-var t = 0
-var tprev = t
 
 /* DAT gui */
 const gui = new DAT.GUI()
@@ -76,12 +67,6 @@ const dof = new DOFPass({
 /* Main scene and camera */
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(50, resize.width / resize.height, 0.1, 1000)
-camera.position.y = 10
-camera.position.z = 20
-camera.setFocalLength ( 20 )
-camera.lookAt( new THREE.Vector3(0,0,0)  )
-
-
 const controls = new OrbitControls(camera, {
 	element: renderer.domElement, 
 	distance: 200,
@@ -90,38 +75,46 @@ const controls = new OrbitControls(camera, {
 })
 
 /* lights */
-var ambientLight = new THREE.AmbientLight( 0x000000 )
-scene.add( ambientLight )
+// var ambientLight = new THREE.AmbientLight( 0x000000 )
+// scene.add( ambientLight )
 
-var lights = []
-lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 )
-lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 )
-lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 )
+// var lights = []
+// lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 )
+// lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 )
+// lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 )
 
-lights[ 0 ].position.set( 0, 200, 0 )
-lights[ 1 ].position.set( 100, 200, 100 )
-lights[ 2 ].position.set( - 100, - 200, - 100 )
+// lights[ 0 ].position.set( 0, 2, 0 )
+// lights[ 1 ].position.set( 1, 2, 1 )
+// lights[ 2 ].position.set( -1, -2, -1 )
 
-scene.add( lights[ 0 ] )
-scene.add( lights[ 1 ] )
-scene.add( lights[ 2 ] )
+// scene.add( lights[ 0 ] )
+// scene.add( lights[ 1 ] )
+// scene.add( lights[ 2 ] )
 
-// Various event listeners 
-resize.addListener(onResize)
 
-/* create main loop */
-const engine = loop(render)
+// UNIFORMS FOR DA SHADER
+var uniforms = {
+	uLows: { value: 1.0 },
+	uMids: { value: 1.0 },
+	uTime: { value: 1.0 },
+	uMouse: { value: new THREE.Vector2() }
+}
 
-/**
-  Resize canvas
-*/
+// uMouse
+container.onmousemove = function (e) {
+	uniforms.uMouse.value.x = e.pageX / renderer.domElement.width;
+	uniforms.uMouse.value.y = e.pageY / renderer.domElement.height;
+}
+
+// uResolution
 function onResize() {
 	camera.aspect = resize.width / resize.height
 	camera.updateProjectionMatrix()
 	renderer.setSize(resize.width, resize.height)
 	composer.setSize(resize.width, resize.height)
 }
-
+onResize()
+resize.addListener(onResize)
 
 ////////////////////////////////////////////////////////////////////////////////////
 /////// magic stuff
@@ -141,65 +134,76 @@ function loadJsonAsync (url, onLoad, onProgress, onError) {
 }
 
 // when finished loading we start the scene
-var geoV, nMax,
+var geoV, nMax, mesh,
 	group = new THREE.Group()
 
-loadJsonAsync('assets/hyophorbe.json')
+loadJsonAsync('assets/cube.json')
 	.then((geometry) => {
 		nMax = geometry.vertices.length
 		geometry = new THREE.BufferGeometry().fromGeometry( geometry )
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
 
-	// WHY IS THIS NOT SHOWING UP ????
 		var material = new THREE.ShaderMaterial({
-			uniforms: {
-			  uTime: { type: "f", value: 1.0 },
-			  uResolution: { type: "v2", value: new THREE.Vector2() },
-			  uMouse: { type: "v2", value: new THREE.Vector2() }
-			},
+			uniforms: uniforms,
 			vertexShader: document.getElementById('vertexShader').textContent,
 			fragmentShader: document.getElementById('fragmentShader').textContent
 		})
 
-		// var material = new THREE.MeshPhongMaterial({
-		// 	color: 0x2194ce,
-		//     shininess: 30,
-		//     specular: 0xffffff
-		// })
-
-		var mesh = new THREE.Mesh( geometry, material )
-
-
+		mesh = new THREE.Mesh( geometry, material )
+		scene.add(mesh)
 		var instance
-		for (var i = 0; i < 15; i++ ) {
-			for (var j = 0; j < 15; j++ ) {
+		for (var i = -15; i < 15; i++ ) {
+			for (var j = -15; j < 15; j++ ) {
 				instance = mesh.clone()
 				instance.position.set( i*30, 0, j*30 )
 				group.add( instance )
 			}
 		}
 		scene.add(group)
-
-		// loaded! 
-		// TODO: show and remove some loader
-
-		// and start the music
-		player.play()
-
-		// model loaded, lets start main loop
-		engine.start()
+		
+		// everyting loaded, ikimasho!
+		init()
 	})
 
-/**
-  make debugging easier
-*/
-var axes = new THREE.AxisHelper(20)
-scene.add(axes)
+	
+function init() {
+	// TODO: show and remove some loader
+	// and start the music
+	player.play()
+
+	// set cam
+	camera.position.x = 2
+	camera.position.y = 2
+	camera.position.z = 3
+	camera.setFocalLength ( 50 )
+	// camera.lookAt( new THREE.Vector3(0,0,0)  )
+
+	/* create main loop */
+	const engine = loop(render)
+	engine.start()
+	/* make debugging easier */
+	var axes = new THREE.AxisHelper(20)
+	scene.add(axes)
+}
+
+
+// basically the next few variables are all feeders for procedural functions such as noise, movement, etc
+
+var subAvg = 0
+var lowAvg = 0
+var midAvg = 0
+var highAvg = 0
+
+var uTime = 0
+var t = 0
+var tprev = t
+
 
 /**
   Render loop
 */
 function render(dt) {
-	time += 0.0025
 	controls.update()
 
 	//update frequencies
@@ -212,21 +216,19 @@ function render(dt) {
 	highAvg = average(analyser, freqs, bands.high.from, bands.high.to)
 	// console.log(subAvg, lowAvg, midAvg, highAvg)
 	
-	/* smooth the object movement */
-	tprev = t * .75
+	uTime += 0.0025
+	tprev = t * .75 // smooth the object movement
 	t += .0025 + lowAvg
 
-	// controls.distance = Map(Math.sin(Math.PI * time)+1, 1, 2, 200, 225)
-	// var newcolor = new THREE.Color()
-	// newcolor.setHSL(midAvg, midAvg, subAvg)
-	
+	mesh.material.uniforms.uTime.value = 0.5 + Math.sin(uTime) * lowAvg;
+	mesh.material.uniforms.uLows.value = lowAvg;
+	mesh.material.uniforms.uMids.value = highAvg;
+
 	for (var i = 0; i < group.children.length; i++) {
 		var tree = group.children[i]
-		var maxDrawRange = Math.round(nMax - (lowAvg)*(nMax) ) * SETTINGS.multiplier
-		tree.geometry.setDrawRange( 0, nMax)
+		var maxDrawRange = Math.round(nMax - (lowAvg)*(nMax) ) 
+		tree.geometry.setDrawRange( 0, maxDrawRange)
 	}
-
-	
 
 	composer.reset()
 	composer.render(scene, camera)
