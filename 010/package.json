@@ -1,9 +1,9 @@
 {
-  "name": "001",
+  "name": "002",
   "version": "0.0.1",
-  "description": "dailly 001",
+  "description": "dailly 002",
   "main": "src/index.js",
-  "repository": "flowen/100avdaillies-starter-kit",
+  "repository": "flowen/100avdaillies",
   "scripts": {
     "start": "budo src/index.js --open --live -- -t babelify -t glslify",
     "build": "browserify -v -d src/index.js -t babelify -t glslify | uglifyjs > index.js"
@@ -28,8 +28,10 @@
     "ios-safe-audio-context": "^1.0.1",
     "mouse-event-offset": "^3.0.2",
     "mouse-wheel": "^1.1.0",
+    "perlin-simplex": "0.0.2",
     "raf-loop": "^1.1.3",
     "three": "*",
+    "three-stl-loader": "^1.0.6",
     "web-audio-analyser": "^2.0.1",
     "web-audio-player": "^1.3.1"
   },
