@@ -37,11 +37,15 @@
 
 	<script type="x-shader/x-fragment" id="fragmentShader">
 		uniform float uLows;
+		uniform float uMids;
 		uniform vec2 uMouse;
 		
 		void main() {
+			float r = uLows;
+			float g = uMids;
+
 			vec2 color = vec2(uMouse.xy);
-			gl_FragColor = vec4(1.0, uLows, color);
+			gl_FragColor = vec4(r, g, color);
 		}
 	</script>
 	<script src="index.js"></script>

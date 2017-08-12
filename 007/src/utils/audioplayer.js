@@ -6,7 +6,7 @@ import createAudioContext from 'ios-safe-audio-context';
 var loading = document.querySelector('.loading');
 var audioContext = createAudioContext();
 
-var sources = ['assets/Devotion podcast 019 with Fernanda Martins-sample.mp3'];
+var sources = ['assets/Ellen Alien - boiler room set.mp3'];
 var player = audioPlayer(sources, {
   context: audioContext,
   buffer: true,
@@ -38,7 +38,7 @@ player.on('load', function () {
   console.log('Playing', Math.round(player.duration) + 's of audio...')
 
   // start audio node
-  player.play()
+  // player.play()
 });
 
 export default player;
