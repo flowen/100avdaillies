@@ -17,7 +17,6 @@ import average from 'analyser-frequency-average'
 import createAudioContext from 'ios-safe-audio-context'
 
 //three.js
-import WireframeG from './objects/WireframeG'
 import OrbitControls from './controls/OrbitControls'
 
 //utilities
@@ -84,9 +83,6 @@ const controls = new OrbitControls(camera, {
 	distanceBounds: [0, 300]
 })
 
-/* Actual content of the scene */
-const wireframeG = new WireframeG(200, 40)
-// scene.add(wireframeG)
 
 // Various event listeners 
 resize.addListener(onResize)
