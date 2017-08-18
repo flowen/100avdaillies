@@ -6,7 +6,7 @@ import createAudioContext from 'ios-safe-audio-context';
 var loading = document.querySelector('.loading');
 var audioContext = createAudioContext();
 
-var sources = ['assets/Joseph Capriati - Fratello (original mix).mp3'];
+var sources = ['assets/nicolasjaar-and-moderat-mix.mp3'];
 var player = audioPlayer(sources, {
   context: audioContext,
   buffer: true,

@@ -1,14 +1,17 @@
 import * as THREE from 'three'
 
 // post-processing
-import loop from 'raf-loop'
 import WAGNER from '@superguigui/wagner'
 import BloomPass from '@superguigui/wagner/src/passes/bloom/MultiPassBloomPass'
 import FXAAPass from '@superguigui/wagner/src/passes/fxaa/FXAAPass'
 import Noise from '@superguigui/wagner/src/passes/noise/noise'
 import VignettePass from '@superguigui/wagner/src/passes/vignette/VignettePass'
 import DOFPass from '@superguigui/wagner/src/passes/dof/DOFPass'
+
+// some tools
+// import loop from 'raf-loop'
 import resize from 'brindille-resize'
+import statsMonitor from 'stats-monitor'
 
 // audio analyser and averager
 import audioPlayer from 'web-audio-player'
@@ -20,20 +23,26 @@ import createAudioContext from 'ios-safe-audio-context'
 import OrbitControls from './controls/OrbitControls'
 
 // particles
-import FlowField from './particles/flow-field'
-import Particles from './particles/particles'
 import Attractors from './particles/attractors'
+import Particles from './particles/particles'
 
 //utilities
-import h from './utils/helpers'
 import Map from './utils/math.map'
 import player from './utils/audioplayer'
 import { audioUtil, analyser, bands } from './utils/analyser'
+
+import h from './utils/helpers'
 import {SETTINGS} from './utils/gui-controls'
 
 /* Init renderer and canvas */
-const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
-// renderer.setClearColor(0x48e2dd) // use styles on
+var renderer = new THREE.WebGLRenderer( { 
+	preserveDrawingBuffer: true 
+})
+renderer.setPixelRatio( window.devicePixelRatio )
+renderer.setSize( window.innerWidth, window.innerHeight )
+renderer.sortObjects = false
+renderer.autoClearColor = false
+renderer.autoClear = false
 
 const container = document.body
 container.style.overflow = 'hidden'
@@ -48,12 +57,10 @@ const noise = new Noise({
 	amount : .2,
 	speed : .15
 })
-
 const vignette = new VignettePass({
 	boost : 1,
 	reduction : 1
 })
-
 const dof = new DOFPass({
 	focalDistance : .001,
 	aperture : .15,
@@ -64,14 +71,12 @@ const dof = new DOFPass({
 /* Main scene and camera */
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(50, resize.width / resize.height, 0.1, 1000)
-camera.position.set(-35, 18, 10)
 
 const controls = new OrbitControls(camera, {
 	element: renderer.domElement, 
 	distance: SETTINGS.camDistance,
 	phi: Math.PI * 0.5,
-	distanceBounds: [0, 300],
-	autoRotate: true
+	distanceBounds: [0, 300]
 })
 
 function onResize() {
@@ -83,66 +88,50 @@ function onResize() {
 onResize()
 resize.addListener(onResize)
 
+const stats = new statsMonitor()
+stats.setMode(0); // 0: fps, 1: ms 
 
-// create a plane for picking up the Raycast
-var planeGeom = new THREE.PlaneGeometry(800,200)
-var planeMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffff33,
-  wireframe: true,
-  transparent: true, 
-  opacity: 0
-})
-var plane = new THREE.Mesh(planeGeom, planeMaterial)
-scene.add(plane)
+stats.domElement.style.position = 'absolute'
+stats.domElement.style.left = '0px'
+stats.domElement.style.top = '0px'
+document.body.appendChild( stats.domElement )
 
 
-// init particles 
-// var particleCount = 50000
-// var particles = new Particles(particleCount)
-// scene.add(particles.points)
-
-var attractors = new Attractors(3)
-var attractorsGroup = attractors.group()
-// scene.add(attractorsGroup)
-
-var attractorPos = attractorsGroup.children.map((vertex) => {
-	return vertex.position
-})
-
-
-// Raycaster 
-// var raycaster = new THREE.Raycaster()
-// var mouse = new THREE.Vector3()
-var attractor = new THREE.Vector3(0,0,0)
-
-// document.addEventListener('mousemove', mouseMove, false)
-// function mouseMove(e) {
-// 	e.preventDefault()
-// 	// don't think about these values too much. They are necessary to setup mouse coords for the raycaster. See 
-// 	mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5)
-// 	mouse.unproject(camera) // very important!!
-
-// 	raycaster.ray.set(camera.position, mouse.sub( camera.position ).normalize() )
-// 	var intersects = raycaster.intersectObject(plane)
-	
-// 	// set last-known attractor point
-// 	if (intersects.length > 0) attractor = intersects[0].point		
-// }
+// fun variables to play with
+var attractor = new THREE.Vector3()
+var particleCount = 200000 // watch performance!
+var iAttractions = 2 // watch performance!
 
 // init particles 
-var particleCount = 100000
 var particles = new Particles(particleCount)
 scene.add(particles.points)
+
+function calculateForce(aVector, pVector) {
+  var f = new THREE.Vector3()
+  var force = f.subVectors(aVector, pVector)
+  var distance = force.length()
+
+  force.divideScalar(distance)
+  return force
+}
 
 // and start the music
 player.play()
 
-/* create main loop */
-const engine = loop(render)
-engine.start()
 /* make debugging easier */
 var axes = new THREE.AxisHelper(20)
 scene.add(axes)
+
+function animate() {
+	requestAnimationFrame( animate )
+	stats.begin()
+	// monitored code goes here 
+	render()
+	stats.end()
+	
+}
+animate()
+
 
 // basically the next few variables are all feeders for procedural functions such as noise, movement, etc
 var subAvg = 0
@@ -150,75 +139,62 @@ var lowAvg = 0
 var midAvg = 0
 var highAvg = 0
 
-var uTime = 0
-var t = 0
-var tprev = t
-
+var time = 0
+var tprev = time
 
 /**
   Render loop
 */
+
 function render(dt) {
 	controls.update()
-	
-	// if (SETTINGS.autoZoomCam) controls.distance = Map(Math.sin(Math.PI * t), -1, 1, 1, 50) + SETTINGS.camDistance
-	SETTINGS.axes === false ? axes.visible = false : axes.visible = true
-	
+	// if (SETTINGS.autoRotateCam) controls.distance = Map(Math.sin(Math.PI * t), -1, 1, 1, 50) + SETTINGS.camDistance
+	SETTINGS.axes === false ? axes.visible = false : axes.visible = true 
+	if (SETTINGS.autoZoomCam) {
+		controls.distance = Map(Math.sin(Math.PI * time), -1, 1, 1, 50)
+	}
 	if (SETTINGS.autoRotateCam) {
-		controls.distance = Map(Math.sin(Math.PI * uTime), -1, 1, 10, 50) + SETTINGS.camDistance
-		controls.enabled = false
-		controls.enableZoom = false
-		controls.autoRotate = true
-		camera.position.set( Math.sin(uTime) * 6, Math.cos(uTime) * 4, Math.cos(uTime) * 12)
+		camera.position.set( Math.sin(time) * .6, Math.cos(time) * .4, Math.cos(time) * 1.2)
 	} else {
 		controls.enabled = true
 		controls.enableZoom = true
 		controls.autoRotate = false
 	}
 
-	//update frequencies & update average of bands
+	// update frequencies first
 	var freqs = audioUtil.frequencies()
+	// then update average of bands
 	subAvg = average(analyser, freqs, bands.sub.from, bands.sub.to)
 	lowAvg = average(analyser, freqs, bands.low.from, bands.low.to)
 	midAvg = average(analyser, freqs, bands.mid.from, bands.mid.to)
 	highAvg = average(analyser, freqs, bands.high.from, bands.high.to)
 	// console.log(subAvg, lowAvg, midAvg, highAvg)
 	
-	uTime += 0.025
-	tprev = t * .75 // smooth the object movement
-	t += .0025 * tprev
-
-
+	time += .0025
+	tprev = time * SETTINGS.tsmooth  // smooth the object movement
 
 	particles.update()
-	particles.points.rotation.x += tprev/4
-	particles.points.rotation.y = Map(Math.sin(Math.PI * uTime * Math.random()), -1, 1, 10, 20)
-	particles.points.rotation.y = Map(Math.sin(Math.PI * Math.random() * highAvg), -1, 1, 10, 20)
-	
+
 	// let's draw all particles first and
 	var pVertices = particles.points.geometry.vertices
 	for (var i = 0; i < pVertices.length; i++) {
 		var pVector = pVertices[i]
-		if (lowAvg > .95) {
-			pVector.add(new THREE.Vector3(h.getRandomFloat(.5,SETTINGS.maxDisplace), h.getRandomFloat(.5,SETTINGS.maxDisplace), h.getRandomFloat(.5,SETTINGS.maxDisplace)))
-		}
 		// than we apply forces of all attractors to particle and calculate direction
-		for (var j = 0; j < SETTINGS.iAttractions; j++) {
-			var attraction = attractors.calculateForce(attractor, pVector)
+		for (var j = 0; j < iAttractions; j++) {
+			var attraction = calculateForce(attractor, pVector)
 			particles.applyForce(attraction, i)
 		}
 	}
 
+	// console.log(SETTINGS)
 	if (SETTINGS.automateClamps) {
-		SETTINGS.clampACCmin = Map(Math.sin(Math.PI * uTime), -1, 1, -7, 0) 
-		SETTINGS.clampACCmax = Map(Math.cos(Math.PI * uTime), -1, 1, 4, 8)
-		SETTINGS.clampVELmin = Map(Math.cos(Math.PI * uTime), -1, 1, -6, 0)
-		SETTINGS.clampVELmax = Map(Math.sin(Math.PI * uTime), -1, 1, 4, 7)
+		SETTINGS.clampVEL = Map(Math.sin(Math.PI * time), -1, 1, .01, .1)
 	}
 
+	// renderer.render(scene, camera)
 	composer.reset()
 	composer.render(scene, camera)
-	composer.pass(bloomPass)
+	// composer.pass(bloomPass)
 	composer.pass(fxaaPass)
 	composer.pass(noise)
 	composer.pass(vignette)
