@@ -10,3 +10,22 @@ node_modules
 /examples
 /test*
 *.stl
+0xx - np subdivisionbuffergeometry/.babelrc
+0xx - np subdivisionbuffergeometry/index.html
+0xx - np subdivisionbuffergeometry/index.js
+0xx - np subdivisionbuffergeometry/package.json
+0xx - np subdivisionbuffergeometry/assets/erik - BBB.mp3
+0xx - np subdivisionbuffergeometry/assets/erik - Yamon.mp3
+0xx - np subdivisionbuffergeometry/assets/goethe_mask.blend
+0xx - np subdivisionbuffergeometry/assets/goethe_mask.json
+0xx - np subdivisionbuffergeometry/assets/goethe_mask_HQ.json
+0xx - np subdivisionbuffergeometry/assets/Lorn - anvil.mp3
+0xx - np subdivisionbuffergeometry/src/index.js
+0xx - np subdivisionbuffergeometry/src/index2-buffergeoshit.js
+0xx - np subdivisionbuffergeometry/src/controls/OrbitControls.js
+0xx - np subdivisionbuffergeometry/src/utils/analyser.js
+0xx - np subdivisionbuffergeometry/src/utils/audioplayer.js
+0xx - np subdivisionbuffergeometry/src/utils/helpers.js
+0xx - np subdivisionbuffergeometry/src/utils/math.map.js
+0xx - np subdivisionbuffergeometry/src/utils/preloader.js
+0xx - np subdivisionbuffergeometry/src/vendor/dat.gui.min.js
