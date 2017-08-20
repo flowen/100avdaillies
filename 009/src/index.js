@@ -145,7 +145,7 @@ var mVertices = 5000,
 	geometry = new THREE.Geometry(),
 	pnoise = perlin.generatePerlinNoise(3, (mVertices/3))
 
-for (i = 0; i < mVertices; i++) {
+for (var i = 0; i < mVertices; i++) {
     var vertex = new THREE.Vector3()
     vertex.x = pnoise[i] * 250
     vertex.y = pnoise[i+1] * 150
