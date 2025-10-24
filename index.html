@@ -1,98 +1,166 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>xenochiku challenge: 100 audiovisuals</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>xenochiku challenge: 100 audiovisuals</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-    </head>
-    <body>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <!--[if lt IE 8]>
+      <p class="browserupgrade">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+        your experience.
+      </p>
+    <![endif]-->
 
-        <h1 id="daillyaudiovisuals">Dailly audiovisuals</h1>
+    <h1 id="daillyaudiovisuals">Dailly audiovisuals</h1>
 
-        <p>A 100 day challenge to create audiovisuals everyday and get the creative juices flowin’. </p>
+    <p>
+      A 100 day challenge to create audiovisuals everyday and get the creative
+      juices flowin’.
+    </p>
 
-        <p>Some topics I want to research icm audiovisuals: </p>
+    <h3>Daily Projects:</h3>
+    <ul>
+      <li><a href="001/">Day 001</a></li>
+      <li><a href="002/">Day 002</a></li>
+      <li><a href="003/">Day 003</a></li>
+      <li><a href="004/">Day 004</a></li>
+      <li><a href="005/">Day 005</a></li>
+      <li><a href="006/">Day 006</a></li>
+      <li><a href="007/">Day 007</a></li>
+      <li><a href="008/">Day 008</a></li>
+      <li><a href="009/">Day 009</a></li>
+      <li><a href="010/">Day 010</a></li>
+      <li><a href="011/">Day 011</a></li>
+      <li><a href="012/">Day 012</a></li>
+      <li><a href="013/">Day 013</a></li>
+      <li><a href="014/">Day 014</a></li>
+      <li><a href="015/">Day 015</a></li>
+      <li><a href="016/">Day 016</a></li>
+      <!-- <li><a href="017/">Day 017</a></li> -->
+    </ul>
 
-        <ul>
-        <li>particle systems</li>
+    <p>Some topics I want to research icm audiovisuals:</p>
 
-        <li>pointclouds</li>
+    <ul>
+      <li>particle systems</li>
 
-        <li>shaders</li>
+      <li>pointclouds</li>
 
-        <li>collision detection</li>
+      <li>shaders</li>
 
-        <li>ray casting</li>
+      <li>collision detection</li>
 
-        <li>import 3d models</li>
-        </ul>
+      <li>ray casting</li>
 
-        <p>probably should look at some different ways to analyse audio too. Anyone has a suggestion?</p>
+      <li>import 3d models</li>
+    </ul>
 
-        <p>Special thanks to @superGuiGui for his <a href="https://github.com/superguigui/threejs-starter-kit">starterkit</a>, which I use as a base.</p>
+    <p>
+      probably should look at some different ways to analyse audio too. Anyone
+      has a suggestion?
+    </p>
 
-        <p>And super special thanks to all the artists producing music everyday. I give props and only take small samples from a song, but if you want something removed please contact me.</p>
+    <p>
+      Special thanks to @superGuiGui for his
+      <a href="https://github.com/superguigui/threejs-starter-kit">starterkit</a
+      >, which I use as a base.
+    </p>
 
-        <p>see <a href="http://instagram.com/flowen_nl">my Instagram</a> for more work.</p>
+    <p>
+      And super special thanks to all the artists producing music everyday. I
+      give props and only take small samples from a song, but if you want
+      something removed please contact me.
+    </p>
 
-        <h2 id="quickhowto">Quick howto:</h2>
+    <p>
+      see <a href="http://instagram.com/flowen_af">my Instagram</a> for more
+      work.
+    </p>
 
-        <p>After cloning or download install all node dependencies:</p>
+    <h2 id="quickhowto">Quick howto:</h2>
 
-        <pre><code class="bash language-bash">npm i
+    <p>After cloning or download install all node dependencies:</p>
+
+    <pre><code class="bash language-bash">npm i
         </code></pre>
 
-        <p>Then launch the main task to open budo livereload server:</p>
+    <p>Then launch the main task to open budo livereload server:</p>
 
-        <pre><code class="bash language-bash">npm start
+    <pre><code class="bash language-bash">npm start
         </code></pre>
 
-        <p>to build the project:</p>
+    <p>to build the project:</p>
 
-        <pre><code class="bash language-bash">npm run build
+    <pre><code class="bash language-bash">npm run build
         </code></pre>
 
-        <p>For some reason the build command doesn’t work so instead I manually copy-paste this in CLI:</p>
+    <p>
+      For some reason the build command doesn’t work so instead I manually
+      copy-paste this in CLI:
+    </p>
 
-        <pre><code class="bash language-bash">browserify -v -d src/index.js -t babelify -t glslify | uglifyjs &gt; index.js
+    <pre><code class="bash language-bash">browserify -v -d src/index.js -t babelify -t glslify | uglifyjs &gt; index.js
         </code></pre>
 
-        <h1 id="whatisxenochiku">what is xenochiku?</h1>
+    <h1 id="whatisxenochiku">what is xenochiku?</h1>
 
-        <p>The answer is 吃苦, transliterated chi ku.</p>
+    <p>The answer is 吃苦, transliterated chi ku.</p>
 
-        <p>In English, this Chinese expression is known as eating bitter. I have found no better explication on the Web than this post on a martial arts forum: </p>
+    <p>
+      In English, this Chinese expression is known as eating bitter. I have
+      found no better explication on the Web than this post on a martial arts
+      forum:
+    </p>
 
-        <p>Chinese phrase for enduring hardship. Or as Occidentals would say: "Grin and Bear It." Other references are: “Keep on Truckin”, “Hang In There”, “Stick It Out”, “Suck It Up”, etc., all to mean to endure something unpleasant in good humor. Or to continue despite difficulties in a general phrase of encouragement meaning to stay focused. </p>
+    <p>
+      Chinese phrase for enduring hardship. Or as Occidentals would say: "Grin
+      and Bear It." Other references are: “Keep on Truckin”, “Hang In There”,
+      “Stick It Out”, “Suck It Up”, etc., all to mean to endure something
+      unpleasant in good humor. Or to continue despite difficulties in a general
+      phrase of encouragement meaning to stay focused.
+    </p>
 
-        <p>and </p>
+    <p>and</p>
 
-        <p>Eating bitter seems to be an aged-old saying, like a parent to a child, upon having the child do something without complaint. It has the meaning of working hard and tolerate some agony in order to acquire what it is one is hoping to achieve. </p>
+    <p>
+      Eating bitter seems to be an aged-old saying, like a parent to a child,
+      upon having the child do something without complaint. It has the meaning
+      of working hard and tolerate some agony in order to acquire what it is one
+      is hoping to achieve.
+    </p>
 
-        <p>Given the rapidity with which Chinese culture is spreading in the West, we will see eating bitter  
-        become more and more common. A biography published in 2010 (not a translation but a book originally in English) has Eating Bitter as its title, and there are many more examples. </p>
+    <p>
+      Given the rapidity with which Chinese culture is spreading in the West, we
+      will see eating bitter  become more and more common. A biography published
+      in 2010 (not a translation but a book originally in English) has Eating
+      Bitter as its title, and there are many more examples.
+    </p>
 
-        <p>I know, some of you will say it's too early to declare eating bitter part of the English language. Well, maybe you still have to put it between inverted commas and explain it upon first mention. I do believe, however, we will see it entering into common circulation soon. This is because (1) none of the English-language phrases*, from "grin and bear it" to "suck it up", carry quite the same connotations and (2) its very Chinese-ness makes it attractive, just as "tiger mom" filled a lacuna that had existed before. </p>
+    <p>
+      I know, some of you will say it's too early to declare eating bitter part
+      of the English language. Well, maybe you still have to put it between
+      inverted commas and explain it upon first mention. I do believe, however,
+      we will see it entering into common circulation soon. This is because (1)
+      none of the English-language phrases*, from "grin and bear it" to "suck it
+      up", carry quite the same connotations and (2) its very Chinese-ness makes
+      it attractive, just as "tiger mom" filled a lacuna that had existed
+      before.
+    </p>
 
-        <p>So, you can say "I am used to eating bitter" or "I am one who likes to eat bitter, as we say at home" to describe yourself. In a job interview, this may get you a quizzical look, which is an opportunity for you to tell more. Interest in things Chinese is high in the West, so ride the wave! </p>
-
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-          ga('create', 'UA-103803506-1', 'auto');
-          ga('send', 'pageview');
-        </script>
-    </body>
+    <p>
+      So, you can say "I am used to eating bitter" or "I am one who likes to eat
+      bitter, as we say at home" to describe yourself. In a job interview, this
+      may get you a quizzical look, which is an opportunity for you to tell
+      more. Interest in things Chinese is high in the West, so ride the wave!
+    </p>
+  </body>
 </html>

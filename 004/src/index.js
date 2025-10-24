@@ -26,6 +26,7 @@ import { audioUtil, analyser, bands } from './utils/analyser'
 
 import h from './utils/helpers'
 import DAT from './vendor/dat.gui.min'
+import preloader from './utils/preloader';
 
 /* Custom variables */
 var subAvg = 0
@@ -88,55 +89,41 @@ const controls = new OrbitControls(camera, {
 resize.addListener(onResize)
 
 /* create main loop */
-const engine = loop(render)
-
-/**
-  Resize canvas
-*/
-function onResize() {
-	camera.aspect = resize.width / resize.height
-	camera.updateProjectionMatrix()
-	renderer.setSize(resize.width, resize.height)
-	composer.setSize(resize.width, resize.height)
+// Initialize preloader and start the scene when ready
+function initScene() {
+  /* create and launch main loop */
+  const engine = loop(render)
+  engine.start()
 }
 
-/////// magic stuff
-
-const loader = new THREE.JSONLoader()
-// contains the loaded geometry
-var geoV
-
-// load it async
-function loadJsonAsync (url, onLoad, onProgress, onError) {
-  return new Promise ((resolve, reject) => {
-    const onProgress = (event) => console.log(`${event.loaded} of ${event.total}`)
-    const onLoad = (geometry) => resolve (geometry)
-    const onError = (event) => reject (event)
-
-    loader.load(
-    	url, onLoad, onProgress, onError)
-  })
+// Set up preloader
+function setupPreloader() {
+  const preloaderEl = document.getElementById('preloader');
+  const loadingText = document.getElementById('loading-text');
+  const progressText = document.getElementById('progress-text');
+  const startButton = document.getElementById('start-button');
+  
+  // Start loading assets
+  preloader.loadAssets(
+    (progress) => {
+      progressText.textContent = `${progress}%`;
+    },
+    () => {
+      // Loading complete
+      loadingText.textContent = 'Ready!';
+      progressText.style.display = 'none';
+      startButton.style.display = 'block';
+      
+      startButton.addEventListener('click', () => {
+        preloaderEl.style.display = 'none';
+        initScene();
+      });
+    }
+  );
 }
 
-// when finished loading we start the scene
-var cloud, nMax, mesh
-
-loadJsonAsync('assets/Harpago_Chiragra.decimate0.125.json')
-	.then((geometry) => {
-		geoV = geometry
-		nMax = geoV.vertices.length
-
-		cloud = createParticles()
-		scene.add(cloud)
-
-		// loaded! 
-		// TODO: show and remove some loader
-
-		// and start the music
-		player.play()
-
-		// model loaded, lets start main loop
-		engine.start()
+// Start the preloader
+setupPreloader();
 	})
 
 /* -------------------------------------------------------------------------------- */

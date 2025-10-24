@@ -28,6 +28,7 @@ import { audioUtil, analyser, bands } from './utils/analyser';
 
 import h from './utils/helpers';
 import DAT from './vendor/dat.gui.min';
+import preloader from './utils/preloader';
 
 /* Custom variables */
 var subAvg
@@ -97,8 +98,41 @@ const wireframeG = new WireframeG(200, 40)
 resize.addListener(onResize)
 
 /* create and launch main loop */
-const engine = loop(render)
-engine.start()
+// Initialize preloader and start the scene when ready
+function initScene() {
+  /* create and launch main loop */
+  const engine = loop(render)
+  engine.start()
+}
+
+// Set up preloader
+function setupPreloader() {
+  const preloaderEl = document.getElementById('preloader');
+  const loadingText = document.getElementById('loading-text');
+  const progressText = document.getElementById('progress-text');
+  const startButton = document.getElementById('start-button');
+  
+  // Start loading assets
+  preloader.loadAssets(
+    (progress) => {
+      progressText.textContent = `${progress}%`;
+    },
+    () => {
+      // Loading complete
+      loadingText.textContent = 'Ready!';
+      progressText.style.display = 'none';
+      startButton.style.display = 'block';
+      
+      startButton.addEventListener('click', () => {
+        preloaderEl.style.display = 'none';
+        initScene();
+      });
+    }
+  );
+}
+
+// Start the preloader
+setupPreloader();
 
 
 /* -------------------------------------------------------------------------------- */

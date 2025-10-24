@@ -26,6 +26,7 @@ import { audioUtil, analyser, bands } from './utils/analyser'
 
 import h from './utils/helpers'
 import DAT from './vendor/dat.gui.min'
+import preloader from './utils/preloader';
 
 
 /* DAT gui */
@@ -216,8 +217,41 @@ function init() {
 	camera.setFocalLength ( 20 )
 
 	/* create main loop */
-	const engine = loop(render)
-	engine.start()
+// Initialize preloader and start the scene when ready
+function initScene() {
+  /* create and launch main loop */
+  const engine = loop(render)
+  engine.start()
+}
+
+// Set up preloader
+function setupPreloader() {
+  const preloaderEl = document.getElementById('preloader');
+  const loadingText = document.getElementById('loading-text');
+  const progressText = document.getElementById('progress-text');
+  const startButton = document.getElementById('start-button');
+  
+  // Start loading assets
+  preloader.loadAssets(
+    (progress) => {
+      progressText.textContent = `${progress}%`;
+    },
+    () => {
+      // Loading complete
+      loadingText.textContent = 'Ready!';
+      progressText.style.display = 'none';
+      startButton.style.display = 'block';
+      
+      startButton.addEventListener('click', () => {
+        preloaderEl.style.display = 'none';
+        initScene();
+      });
+    }
+  );
+}
+
+// Start the preloader
+setupPreloader();
 	/* make debugging easier */
 	// var axes = new THREE.AxisHelper(20)
 	// scene.add(axes)

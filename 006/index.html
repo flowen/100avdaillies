@@ -1,62 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-	<title>Xenochiku</title>
-	<meta charset="utf-8">
-	<style>
-		body {
-			background-color: #000;
-		}
-		.loading {
-			position: absolute;
-			transform: translate(-50%, -50%);
-			left: 50%;
-			top: 50%;
-			padding: 20px;
-			background: #fff;
-			border-radius: 5px;
-			text-align: center;
-			text-transform: uppercase;
-			font-weight: bold;
-			font-size: 45px;
-		}
-	</style>
-</head>
-<body>
-	<div class="loading">Loading...</div>
+  <head>
+    <title>Xenochiku</title>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        background-color: #000;
+      }
+      .loading {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 45px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="preloader" class="loading">
+      <div id="loading-text">Loading...</div>
+      <div id="progress-text">0%</div>
+      <button id="start-button" style="display: none; margin-top: 20px; padding: 10px 20px; font-size: 18px; background: #000; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Start</button>
+    </div>
 
+    <script type="x-shader/x-vertex" id="vertexShader">
+      uniform vec2 uMouse;
 
-	<script type="x-shader/x-vertex" id="vertexShader">
-		uniform vec2 uMouse;
+      void main() {
+      	vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+      	gl_Position = projectionMatrix * modelViewPosition;
+      }
+    </script>
 
-		void main() {
-			vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-			gl_Position = projectionMatrix * modelViewPosition;
-		}
-	</script>
+    <script type="x-shader/x-fragment" id="fragmentShader">
+      uniform float uLows;
+      uniform float uMids;
+      uniform vec2 uMouse;
 
-	<script type="x-shader/x-fragment" id="fragmentShader">
-		uniform float uLows;
-		uniform float uMids;
-		uniform vec2 uMouse;
-		
-		void main() {
-			float r = uLows;
-			float g = uMids;
+      void main() {
+      	float r = uLows;
+      	float g = uMids;
 
-			vec2 color = vec2(uMouse.xy);
-			gl_FragColor = vec4(r, g, color);
-		}
-	</script>
-	<script src="index.js"></script>
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-	  ga('create', 'UA-103803506-1', 'auto');
-	  ga('send', 'pageview');
-	</script>
-</body>
+      	vec2 color = vec2(uMouse.xy);
+      	gl_FragColor = vec4(r, g, color);
+      }
+    </script>
+    <script src="index.js"></script>
+  </body>
 </html>

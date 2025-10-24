@@ -27,6 +27,7 @@ import { audioUtil, analyser, bands } from './utils/analyser'
 
 import h from './utils/helpers'
 import DAT from './vendor/dat.gui.min'
+import preloader from './utils/preloader';
 
 /* Custom variables */
 var subAvg = 0
@@ -109,89 +110,41 @@ const wireframeG = new WireframeG(200, 40)
 resize.addListener(onResize)
 
 /* create main loop */
-const engine = loop(render)
-
-/**
-  Resize canvas
-*/
-function onResize() {
-	camera.aspect = resize.width / resize.height
-	camera.updateProjectionMatrix()
-	renderer.setSize(resize.width, resize.height)
-	composer.setSize(resize.width, resize.height)
+// Initialize preloader and start the scene when ready
+function initScene() {
+  /* create and launch main loop */
+  const engine = loop(render)
+  engine.start()
 }
 
-/////// magic stuff
-
-const loader = new THREE.JSONLoader()
-// contains the loaded geometry
-var geoV
-
-// load it async
-function loadJsonAsync (url, onLoad, onProgress, onError) {
-  return new Promise ((resolve, reject) => {
-    const onProgress = (event) => console.log(`${event.loaded} of ${event.total}`)
-    const onLoad = (geometry) => resolve (geometry)
-    const onError = (event) => reject (event)
-
-    loader.load(
-    	url, onLoad, onProgress, onError)
-  })
+// Set up preloader
+function setupPreloader() {
+  const preloaderEl = document.getElementById('preloader');
+  const loadingText = document.getElementById('loading-text');
+  const progressText = document.getElementById('progress-text');
+  const startButton = document.getElementById('start-button');
+  
+  // Start loading assets
+  preloader.loadAssets(
+    (progress) => {
+      progressText.textContent = `${progress}%`;
+    },
+    () => {
+      // Loading complete
+      loadingText.textContent = 'Ready!';
+      progressText.style.display = 'none';
+      startButton.style.display = 'block';
+      
+      startButton.addEventListener('click', () => {
+        preloaderEl.style.display = 'none';
+        initScene();
+      });
+    }
+  );
 }
 
-// when finished loading we start the scene
-var hyophorbe, nMax, mesh
-var group = new THREE.Group()
-
-/// POINThyophorbe THINGY
-
-function createParticles() {
-    var material = new THREE.PointsMaterial({
-        vertexColors: THREE.VertexColors
-    })
-    geoV = new THREE.BufferGeometry().fromGeometry( geoV )
-
-    return new THREE.Points( geoV, material )
-}
-
-loadJsonAsync('assets/hyophorbe-mediumsize.json')
-	.then((geometry) => {
-		geoV = geometry
-		nMax = geoV.vertices.length
-
-		var material, mesh, instance;
-		material = new THREE.MeshPhongMaterial({
-			color: 0x2194ce,
-		    shininess: 30,
-		    specular: 0xffffff,
-		    wireframe: true
-		})
-		geoV = new THREE.BufferGeometry().fromGeometry( geoV )
-		mesh = new THREE.Mesh( geoV, material )
-
-
-		// console.log(mesh)
-		for (var i = 0; i < 15; i++ ) {
-			for (var j = 0; j < 15; j++ ) {
-				instance = mesh.clone()
-				instance.position.set( i*30, 0, j*30 )
-				group.add( instance )
-			}
-		}
-		scene.add(group)
-
-		camera.position.x = 177
-		camera.position.y = 12
-		camera.position.z = 172
-
-		// loaded! 
-		// TODO: show and remove some loader
-
-		// and start the music
-		player.play()
-
-		// model loaded, lets start main loop
-		engine.start()
+// Start the preloader
+setupPreloader();
 	})
 
 

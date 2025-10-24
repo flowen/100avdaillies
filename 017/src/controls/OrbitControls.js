@@ -1,11 +1,7 @@
-import {
-  Vector3,
-  Vector2,
-  Quaternion
-} from 'three';
-import eventOffset from 'mouse-event-offset';
-import mouseWheel from 'mouse-wheel';
-import clamp from 'clamp';
+import { Vector3, Vector2, Quaternion } from "three";
+import eventOffset from "mouse-event-offset";
+import mouseWheel from "mouse-wheel";
+import clamp from "clamp";
 
 const Y_UP = new Vector3(0, 1, 0);
 const EPSILON = 1e-10;
@@ -68,9 +64,9 @@ export default class OrbitControls {
 
   addEvents() {
     if (this.rotate) {
-      this.parent.addEventListener('mousedown', this.onInputDown);
-      this.parent.addEventListener('mousemove', this.onInputMove);
-      this.parent.addEventListener('mouseup', this.onInputUp);
+      this.parent.addEventListener("mousedown", this.onInputDown);
+      this.parent.addEventListener("mousemove", this.onInputMove);
+      this.parent.addEventListener("mouseup", this.onInputUp);
     }
 
     if (this.zoom) {
@@ -79,9 +75,9 @@ export default class OrbitControls {
   }
 
   removeEvents() {
-    this.parent.removeEventListener('mousedown', this.onInputDown);
-    this.parent.removeEventListener('mousemove', this.onInputMove);
-    this.parent.removeEventListener('mouseup', this.onInputUp);
+    this.parent.removeEventListener("mousedown", this.onInputDown);
+    this.parent.removeEventListener("mousemove", this.onInputMove);
+    this.parent.removeEventListener("mouseup", this.onInputUp);
   }
 
   preventDefault(e) {
@@ -114,12 +110,17 @@ export default class OrbitControls {
   }
 
   insideBounds(pos) {
-    if (this.element === window || this.element === document || this.element === document.body) {
+    if (
+      this.element === window ||
+      this.element === document ||
+      this.element === document.body
+    ) {
       return true;
-    }
-    else {
+    } else {
       const rect = this.element.getBoundingClientRect();
-      return pos.x >= 0 && pos.y >= 0 && pos.x < rect.width && pos.y < rect.height;
+      return (
+        pos.x >= 0 && pos.y >= 0 && pos.x < rect.width && pos.y < rect.height
+      );
     }
   }
 
@@ -170,7 +171,7 @@ export default class OrbitControls {
 
   _prepareOffset() {
     this.upQuat.setFromUnitVectors(this.object.up, Y_UP);
-    this.upQuatInverse.copy(this.upQuat).inverse();
+    this.upQuatInverse.copy(this.upQuat).invert();
 
     this.offset.subVectors(this.object.position, this.target);
     this.offset.applyQuaternion(this.upQuat);
@@ -190,7 +191,7 @@ export default class OrbitControls {
   }
 
   _applyDamping() {
-    const damp = typeof this.damping === 'number' ? this.damping : 1;
+    const damp = typeof this.damping === "number" ? this.damping : 1;
     this.inputDelta.x *= 1 - damp;
     this.inputDelta.y *= 1 - damp;
     this.inputDelta.z *= 1 - damp;
@@ -200,7 +201,10 @@ export default class OrbitControls {
     this._prepareOffset();
 
     let theta = Math.atan2(this.offset.x, this.offset.z);
-    let phi = Math.atan2(Math.sqrt(this.offset.x * this.offset.x + this.offset.z * this.offset.z), this.offset.y);
+    let phi = Math.atan2(
+      Math.sqrt(this.offset.x * this.offset.x + this.offset.z * this.offset.z),
+      this.offset.y
+    );
 
     theta += this.inputDelta.x;
     phi += this.inputDelta.y;
@@ -209,7 +213,11 @@ export default class OrbitControls {
     this.phi = phi;
 
     this.distance += this.inputDelta.z;
-    this.distance = clamp(this.distance, this.distanceBounds[0], this.distanceBounds[1]);
+    this.distance = clamp(
+      this.distance,
+      this.distanceBounds[0],
+      this.distanceBounds[1]
+    );
 
     this._computeOffset();
     this._applyTransformation();
