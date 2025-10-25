@@ -27,7 +27,7 @@ import player from "./utils/audioplayer";
 import { audioUtil, analyser, bands } from "./utils/analyser";
 
 import h from "./utils/helpers";
-import DAT from "./vendor/dat.gui.min";
+import * as DAT from "./vendor/dat.gui.min";
 import preloader from "./utils/preloader";
 
 /* Custom variables */

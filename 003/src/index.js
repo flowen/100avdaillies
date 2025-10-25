@@ -12,7 +12,7 @@ import resize from 'brindille-resize';
 // import earcut from 'earcut';
 
 // audio analyser and averager
-import audioPlayer from 'web-audio-player';
+import audioPlayer from "audioplayer";
 import createAnalyser from 'web-audio-analyser';
 import average from 'analyser-frequency-average';
 import createAudioContext from 'ios-safe-audio-context';

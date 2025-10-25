@@ -1,4 +1,4 @@
-import audioPlayer from "web-audio-player";
+import audioPlayer from "audioplayer";
 import createAnalyser from "web-audio-analyser";
 import average from "analyser-frequency-average";
 import createAudioContext from "ios-safe-audio-context";

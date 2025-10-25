@@ -1,26 +1,29 @@
 {
-  "name": "001",
+  "name": "100avdaillies",
   "version": "0.0.1",
-  "description": "dailly 001",
-  "main": "src/index.js",
-  "repository": "flowen/100avdaillies-starter-kit",
+  "description": "100 audiovisuals challenge",
+  "main": "index.html",
+  "repository": "flowen/100avdaillies",
   "scripts": {
-    "start": "budo src/index.js --open --live -- -t babelify -t glslify",
-    "build": "browserify -v -d src/index.js -t babelify -t glslify | uglifyjs > index.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
-    "budo": "^8.3.0",
-    "uglify-js": "^2.7.5"
+    "live-server": "^1.2.2",
+    "uglify-js": "^3.17.4",
+    "vite": "^7.1.12"
   },
   "dependencies": {
     "@superguigui/wagner": "*",
     "analyser-frequency-average": "^1.0.0",
     "audioplayer": "^3.1.4",
     "brindille-resize": "^0.1.3",
+    "browserify-fs": "^1.0.0",
     "clamp": "^1.0.1",
     "detect-audio-autoplay": "^1.1.1",
     "earcut": "^2.1.1",
@@ -28,10 +31,13 @@
     "ios-safe-audio-context": "^1.0.1",
     "mouse-event-offset": "^3.0.2",
     "mouse-wheel": "^1.1.0",
+    "perlin-noise": "0.0.1",
+    "perlin-simplex": "0.0.2",
     "raf-loop": "^1.1.3",
+    "stats-monitor": "^1.0.0",
     "three": "*",
-    "web-audio-analyser": "^2.0.1",
-    "web-audio-player": "^1.3.1"
+    "three-stl-loader": "^1.0.6",
+    "web-audio-analyser": "^2.0.1"
   },
   "author": "Lowen Flowen",
   "license": "BSD-2-Clause"

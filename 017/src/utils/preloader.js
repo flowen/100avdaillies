@@ -33,53 +33,24 @@ class Preloader {
     this.onProgress = onProgress;
     this.onComplete = onComplete;
 
-    // Get all asset files from the assets folder
-    this.assetFiles = await this.getAssetFiles();
-
-    if (this.assetFiles.length === 0) {
-      // No assets to load, call complete immediately
-      if (onComplete) onComplete();
-      return;
+    // For now, let's just complete immediately to test if the issue is with asset loading
+    console.log("Preloader: Skipping asset loading for now");
+    
+    // Simulate loading progress
+    if (onProgress) {
+      onProgress(100);
     }
-
-    // Load each asset type
-    this.assetFiles.forEach((file) => {
-      const extension = file.split(".").pop().toLowerCase();
-
-      if (extension === "mp3") {
-        this.loadAudio(file);
-      } else if (extension === "json") {
-        this.loadJSON(file);
-      } else if (["jpg", "jpeg", "png", "gif"].includes(extension)) {
-        this.loadTexture(file);
-      }
-    });
+    
+    // Complete immediately
+    setTimeout(() => {
+      if (onComplete) onComplete();
+    }, 100);
   }
 
   // Get list of asset files by scanning the assets folder
   async getAssetFiles() {
-    const assetFiles = [];
-
-    // Assets specific to project 017
-    const projectAssets = [
-      "Tommy Four Seven - Bactria [47006].mp3",
-      "Harpago_Chiragra.decimate0.125.json",
-    ];
-
-    // Check which assets exist by trying to load them
-    for (const asset of projectAssets) {
-      try {
-        const response = await fetch(`assets/${asset}`, { method: "HEAD" });
-        if (response.ok) {
-          assetFiles.push(asset);
-        }
-      } catch (error) {
-        // Asset doesn't exist, skip it
-        console.warn(`Asset not found: ${asset}`);
-      }
-    }
-
-    return assetFiles;
+    // Return empty array for now to test
+    return [];
   }
 
   // Load audio file
@@ -101,12 +72,12 @@ class Preloader {
 
   // Load JSON file (3D models)
   loadJSON(filename) {
-    const loader = new THREE.JSONLoader();
+    const loader = new THREE.ObjectLoader(this.loader);
 
     loader.load(
       `assets/${filename}`,
-      (geometry, materials) => {
-        this.loadedAssets[filename] = { geometry, materials };
+      (object) => {
+        this.loadedAssets[filename] = object;
       },
       undefined,
       (error) => {

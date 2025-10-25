@@ -11,7 +11,7 @@ import DOFPass from "@superguigui/wagner/src/passes/dof/DOFPass";
 import resize from "brindille-resize";
 
 // audio analyser and averager
-import audioPlayer from "web-audio-player";
+import audioPlayer from "audioplayer";
 import createAnalyser from "web-audio-analyser";
 import average from "analyser-frequency-average";
 import createAudioContext from "ios-safe-audio-context";
@@ -21,7 +21,7 @@ import OrbitControls from "./controls/OrbitControls";
 
 //utilities
 import Map from "./utils/math.map";
-import audioPlayer from "./utils/audioplayer";
+import player from "./utils/audioplayer";
 import {
   audioUtil,
   analyser,

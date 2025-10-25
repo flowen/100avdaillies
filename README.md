@@ -1,61 +1,130 @@
-# Dailly audiovisuals
+# 100 Audiovisuals Challenge
 
-A 100 day challenge to create audiovisuals everyday and get the creative juices flowin’. 
+A collection of 17 audiovisual experiments built with Three.js and Web Audio API.
 
-[My daily log](https://medium.com/@flowen/what-i-learned-creating-a-100-av-daillies-log-ad2bfc8ff1c0)
-Some topics I want to research icm audiovisuals: 
+## 🚀 Quick Start
 
-- particle systems
-- pointclouds
-- shaders
-- collision detection
-- ray casting
-- import 3d models
-- fractals
+### Prerequisites
+- Node.js (v14 or higher)
+- npm
 
-probably should look at some different ways to analyse audio too. Anyone has a suggestion?
-
-Special thanks to @superGuiGui for his [starterkit](https://github.com/superguigui/threejs-starter-kit), which I use as a base.
-
-And super special thanks to all the artists producing music everyday. I give props and only take small samples from a song, but if you want something removed please contact me.
-
-see [my Instagram](http://instagram.com/flowen_nl) for more work.
-
-
-## Quick howto:
-
-After cloning or download install all node dependencies:
+### Installation
 ```bash
-npm i
+# Install all dependencies (only need to run once)
+npm install
 ```
 
-Then launch the main task to open budo livereload server:
+### Development
 ```bash
+# Start development server for project 001
 npm start
+
+# Start development server for specific project
+npm run start:001
+npm run start:002
+# ... up to start:017
 ```
 
-to build the project:
+**Note**: The development servers use `live-server` for compatibility with Node.js v23+. Each project runs on a different port (9966-9982) to avoid conflicts.
+
+### Building
 ```bash
+# Build all projects
 npm run build
+
+# Build specific project
+npm run build:001
+npm run build:002
+# ... up to build:017
 ```
-For some reason the build command doesn’t work so instead I manually copy-paste this in CLI:
+
+### Cleaning
 ```bash
-browserify -v -d src/index.js -t babelify -t glslify | uglifyjs > index.js
+# Clean all build files
+npm run clean
+
+# Clean specific project
+npm run clean:001
+npm run clean:002
+# ... up to clean:017
 ```
-# what is xenochiku?
-The answer is 吃苦, transliterated chi ku.
 
-In English, this Chinese expression is known as eating bitter. I have found no better explication on the Web than this post on a martial arts forum: 
+## 📁 Project Structure
 
-Chinese phrase for enduring hardship. Or as Occidentals would say: "Grin and Bear It." Other references are: “Keep on Truckin”, “Hang In There”, “Stick It Out”, “Suck It Up”, etc., all to mean to endure something unpleasant in good humor. Or to continue despite difficulties in a general phrase of encouragement meaning to stay focused. 
+```
+100avdaillies/
+├── package.json          # Root package.json with all dependencies
+├── build.js              # Unified build script
+├── index.html            # Main landing page
+├── 001/                  # Project 001
+│   ├── src/
+│   │   ├── index.js
+│   │   ├── objects/
+│   │   ├── utils/
+│   │   └── vendor/
+│   ├── assets/
+│   └── index.html
+├── 002/                  # Project 002
+│   └── ...
+└── ...                   # Projects 003-017
+```
 
-and 
+## 🛠️ Build System
 
-Eating bitter seems to be an aged-old saying, like a parent to a child, upon having the child do something without complaint. It has the meaning of working hard and tolerate some agony in order to acquire what it is one is hoping to achieve. 
+The project uses a unified build system:
 
-Given the rapidity with which Chinese culture is spreading in the West, we will see eating bitter  
-become more and more common. A biography published in 2010 (not a translation but a book originally in English) has Eating Bitter as its title, and there are many more examples. 
+- **Single package.json**: All dependencies are managed in the root `package.json`
+- **Parallel builds**: The `build.js` script builds all projects in parallel for faster builds
+- **Individual builds**: You can still build specific projects using `npm run build:XXX`
+- **Clean system**: Easy cleanup of build files with `npm run clean`
 
-I know, some of you will say it's too early to declare eating bitter part of the English language. Well, maybe you still have to put it between inverted commas and explain it upon first mention. I do believe, however, we will see it entering into common circulation soon. This is because (1) none of the English-language phrases*, from "grin and bear it" to "suck it up", carry quite the same connotations and (2) its very Chinese-ness makes it attractive, just as "tiger mom" filled a lacuna that had existed before. 
+### Build Script Features
 
-So, you can say "I am used to eating bitter" or "I am one who likes to eat bitter, as we say at home" to describe yourself. In a job interview, this may get you a quizzical look, which is an opportunity for you to tell more. Interest in things Chinese is high in the West, so ride the wave! 
+- **Parallel execution**: All projects build simultaneously
+- **Progress tracking**: Shows build progress for each project
+- **Error handling**: Stops on first error with clear messages
+- **Timing**: Reports total build time
+- **Cross-platform**: Works on Windows, macOS, and Linux
+
+## 🎵 Features
+
+Each project includes:
+- **Preloader system**: Shows loading progress and requires user interaction
+- **Audio visualization**: Real-time audio analysis and visualization
+- **Three.js scenes**: 3D graphics and animations
+- **Responsive design**: Works on desktop and mobile
+- **Web Audio API**: High-quality audio processing
+
+## 🎨 Projects Overview
+
+- **001-003**: Basic Three.js scenes with audio visualization
+- **004-006**: 3D models and textures
+- **007-009**: Advanced shaders and post-processing
+- **010-012**: Particle systems and effects
+- **013-015**: Complex geometries and animations
+- **016-017**: Advanced audio-reactive visuals
+
+## 🔧 Development
+
+### Adding New Projects
+1. Create a new directory (e.g., `018/`)
+2. Add the project structure with `src/`, `assets/`, and `index.html`
+3. Update `build.js` to include the new project number
+4. Add start/build/clean scripts to `package.json`
+
+### Dependencies
+All dependencies are managed in the root `package.json`:
+- **Three.js**: 3D graphics library
+- **Web Audio API**: Audio processing
+- **Browserify**: Module bundling
+- **Babelify**: ES6+ transpilation
+- **Glslify**: GLSL shader processing
+- **UglifyJS**: Code minification
+
+## 📝 License
+
+BSD-2-Clause License
+
+## 👨‍💻 Author
+
+Lowen Flowen
